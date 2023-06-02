@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Permissões | Dashboard</title>
+    <link rel="shortcut icon" href="../../assets/images/logosProjeto/flaticon-HOPTECH.png" type="image/x-icon">
+     <!-- Flaticon -->
+
+    <link rel="stylesheet" href="css/permissao.css">
+    <link rel="stylesheet" href="css/styleDashboard.css"> <!-- Importando CSS do dashboard -->
+</head>
+
+<body id="dashboard">
+    <div class="div_menu_lateral">
+        <a href="../../hoptech-site/site-hoptech.html"><img src="../../assets/images/logosProjeto/HopTech-dark.png"
+            class="logo_hoptech" alt="Logo da HopTech"></a>
+        <button id="menu_dashboard" class="pageAtual" onclick="goDashboard()">
+            <img src="../../assets/images/icons/dashboard.png" class="icons_menu" alt="Ícone do dashboard">
+            Dashboard
+        </button>
+        <button id="menu_cadastros" onclick="goUsuario()">
+            <img src="../../assets/images/icons/icon_usuarios.png" class="icons_menu" style="width: 40px;"
+                alt="Ícone de usuários">
+            Usuários
+        </button>
+        <button id="menu_perms" onclick="goPermissoes()">
+            <img src="../../assets/images/icons/permissao.png" class="icons_menu" alt="Ícone de Permissões">
+            Permissões
+        </button>
+        <button id="menu_plantacoes" onclick="goPlantacao()">
+            <img src="../../assets/images/icons/iconeLupulo.png" class="icons_menu" style="width: 40px;"
+                alt="Ícone de usuários">
+            Plantações
+        </button>
+        <button id="menu_hist" onclick="goHistorico()">
+            <img src="../../assets/images/icons/iconeHistorico.png" class="icons_menu" style="width: 30px;"
+                alt="Ícone do histórico">
+            Histórico
+        </button>
+        <footer>
+            <a href="../../nextpoint-site/index.html"><img src="../../assets/images/logosProjeto/NEXTPOINT.png"
+                    class="logo_empresa" alt="Logo da NEXTPOINT"></a>
+            © 2023 HopTech
+        </footer>
+    </div>
+    <div class="div_conteiner_conteudo">
+        <div class="div_menu_top">
+            <div><!--  --></div>
+            <h3 class="titleDashboardCliente">Gerenciamento - <span id="empresaNome">EMPRESA_NOME</span> - <span id="usuarioNome">USUARIO_NOME</span></h3>
+            <button class="btnSair" onclick="sair(); return false">Sair</button>
+        </div>
+        <div class="conteiner_cadastro_usuarios">
+            <div class="box_cadastro_usuarios">
+                <div class="tabela_gerenciamento">
+                    <h2>Gerenciar Funcionários e Permissões</h2> <br>
+                    <table class="tabela_usuarios">
+                        <tr class="tr1">
+                            <th>Nome</th>
+                            <th>Plantação</th>
+                            <th>Excluir</th>
+                            <th class="th_end">Editar</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="imagem_cadastro_usuarios">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="div_edicao">
+        <p><h2 id="usuario_edicao">User</h2></p>
+        
+        <label>Mudar nome de usuário</label>
+        <input type="text" id="mudancaNomeUsuario">
+        <label for="">Permissão em:</label>
+        <select id="select_plantacoes"></select>
+        <div class="buttonBox">
+            <button onclick="confirmarEdicao()">Confirmar</button>
+            <button onclick="cancelarEdicao()">Cancelar</button>
+        </div>
+    </div>
+</body>
+</html>
+
+<!-- Importando a biblioteca ChartJS: -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Importando o plugin DataLabels do ChartJS: -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<!-- Importando o back-end do ChartJS: -->
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<script src="js/funcoes.js"></script>
+<script type="text/javascript" nonce="{coloque_seu_valor_nonce_aqui}" src="https://desk.zoho.com/portal/api/web/inapp/858677000000226265?orgId=810882795" defer></script>
+<script>
+    function puxarUsuariosEmpresa(fkEmpresa){
+        fetch(`/usuarios/puxarFuncionarios/${fkEmpresa}`, {cache: 'no-store'})
+        .then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    console.log(resposta)
+                    for(i in resposta){
+                        const usuario = {
+                            nome: resposta[i].usuario,
+                            idUsuario: resposta[i].idUsuario,
+                            idPermissao: resposta[i].idPermissao,
+                            fkPlantacao: resposta[i].fkPlantacao
+                        }
+                        const tr = document.createElement('tr');
+                        const thNome = document.createElement('th');
+                        thNome.textContent = usuario.nome;
+                        const thPlantacao = document.createElement('th');
+                        thPlantacao.textContent = usuario.fkPlantacao;
+                        const thExcluir = document.createElement('th');
+                        thExcluir.textContent = 'Excluir'
+                        thExcluir.setAttribute('class', 'th_function');
+                        thExcluir.addEventListener('click', ()=>{
+                            excluirPermissao(usuario)
+                        })
+                        const thEditar = document.createElement('th');
+                        thEditar.textContent = 'Editar'
+                        thEditar.setAttribute('class', 'th_function th_end');
+                        thEditar.addEventListener('click', ()=>{
+                            editarPermissao(usuario)
+                        })
+                        tr.appendChild(thNome)
+                        tr.appendChild(thPlantacao)
+                        tr.appendChild(thExcluir)
+                        tr.appendChild(thEditar)
+                        document.querySelector('.tabela_usuarios').appendChild(tr)
+                    }
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+    }
+    puxarUsuariosEmpresa(sessionStorage.getItem('FK_EMPRESA'))
+
+    function excluirPermissao(usuario){
+        Swal.fire({
+            title: `Você realmente quer excluir o usuário ${usuario.nome}?`,
+            showDenyButton: true,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No'
+            })
+            .then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/usuarios/excluirUsuario/`,
+                {method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    usuarioJSON: usuario
+                })})
+                .then(function(resposta){
+                    if(resposta.ok){
+                        Swal.fire('Saved!', '', 'success')
+                        location.reload()
+                    }
+                })
+            }
+        })
+    }
+
+    function editarPermissao(usuario){
+        document.querySelector('.div_edicao').style.display = 'flex';
+        usuario_edicao.innerHTML = usuario.nome;
+        sessionStorage.ID_PERMISSAO = usuario.idPermissao;
+    }
+
+    function confirmarEdicao(){
+        Swal.fire({
+            title: `Você realmente quer editar as permissões do usuário ${usuario_edicao.textContent}?`,
+            showDenyButton: true,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No'
+            })
+            .then((result) => {
+            if (result.isConfirmed) {
+                var mudancas = {
+                    nomeAntigo: usuario_edicao.textContent,
+                    nomeNovo: mudancaNomeUsuario.value,
+                    fkPlantacao: select_plantacoes.value,
+                    idPermissao: sessionStorage.getItem('ID_PERMISSAO')
+                }
+                fetch(`/usuarios/editarUsuario/`,
+                {method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    mudancasJSON: mudancas
+                })})
+                .then(function(resposta){
+                    if(resposta.ok){
+                        Swal.fire('Mudanças feitas com sucesso!', '', 'success')
+                        setTimeout(()=>{location.reload()}, 1000)
+                    }else{
+                        Swal.fire('Houve algum erro na mudança de dados, tente novamente por favor!', '', 'error')
+                    }
+                }).catch(function(error){
+                    console.log('ERRO: ' + error)
+                })
+            }
+        })
+    }
+
+    function cancelarEdicao(){
+        document.querySelector('.div_edicao').style.display = 'none';
+    }
+    puxarPlantacoesEdit(sessionStorage.getItem('FK_EMPRESA'))
+    function puxarPlantacoesEdit(idEmpresa){
+        fetch(`/medidas/plantacoesPorEmpresa/${idEmpresa}`, {cache: 'no-store'})
+        .then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    for(i = 0; i <  resposta.length; i++){
+                        const option = document.createElement('option');
+                        option.textContent = 'Plantação ' + resposta[i].idPlantacao;
+                        option.setAttribute('class', 'optionPlantacoes')
+                        option.setAttribute('value', resposta[i].idPlantacao)
+                        select_plantacoes.appendChild(option);
+                    }
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+    }
+</script>

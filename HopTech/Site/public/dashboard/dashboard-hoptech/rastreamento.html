@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreamento</title>
+    <link rel="shortcut icon" href="../../assets/images/logosProjeto/HopTech-dark.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/cadastroHopTech.css">
+</head>
+
+<body>
+    <div class="div_menu_lateral">
+        <img src="../../assets/images/logosProjeto/HopTech-dark.png" class="logo_hoptech" alt="Logo da HopTech">
+        <button onclick="irParaDashboard(); return false">
+            <img src="../../assets/images/icons/dashboard.png" class="icons_menu" alt="icone dashboard">
+            Dashboard
+        </button>
+        <button onclick="irParaCadastro(); return false">
+            <img src="../../assets/images/icons/icon_cadastro.png" width="35" class="icons_menu" alt="icone cadastro">
+            Cadastro de empresa
+        </button>
+        <button onclick="irParaCadastroPlantacao(); return false">
+            <img src="../../assets/images/icons/notification.png" width="35" class="icons_menu"
+                alt="Ícone de caixa de entrada">
+            Plantação e Sensores
+        </button>
+        <button class="pageAtual" onclick="irParaRastreamento(); return false">
+            <img src="../../assets/images/icons/dashboard.png" class="icons_menu" alt="icone dashboard">
+            Rastreamento <br>
+        </button>
+        <footer>
+            <a href="../../nextpoint-site/index.html"><img src="../../assets/images/logosProjeto/NEXTpoint.png"
+                    class="logo_empresa" alt="Logo da NEXTPOINT"></a>
+            © 2023 HopTech
+        </footer>
+    </div>
+    <div class="conteiner_cadastro_usuarios">
+        <div class="box_cadastro_usuarios">
+            <div class="tabela_gerenciamento">
+                <h2> tabela plantações</h2> <br>
+                <table class="tabela_usuarios">
+                    <tr class="tr1">
+                        <th>Nome</th>
+                        <th>Plantação</th>
+                        <th>Excluir</th>
+                        <th class="th_end">Editar</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="tabela_gerenciamento">
+                <h2>Tabela sensores</h2> <br>
+                <table class="tabela_usuarios">
+                    <tr class="tr1">
+                        <th>Nome</th>
+                        <th>Plantação</th>
+                        <th>Excluir</th>
+                        <th class="th_end">Editar</th>
+                    </tr>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="../dashboard-hoptech/js/funcoes-admin.js">
+
+</script>

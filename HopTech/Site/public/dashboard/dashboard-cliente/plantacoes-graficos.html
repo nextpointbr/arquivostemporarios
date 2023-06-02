@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel Inicial | Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../assets/images/logosProjeto/flaticon-HOPTECH.png" type="image/x-icon">
+    <!-- Importando CSS do dashboard -->
+    <link rel="stylesheet" href="../../dashboard/dashboard-cliente/css/styleDashboard.css">
+    <link rel="stylesheet" href="../../dashboard/dashboard-cliente/css/stylePlantacoes.css">
+    <!-- Importando FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body id="dashboard">
+    <div class="div_menu_lateral">
+        <a href="../../hoptech-site/site-hoptech.html"><img src="../../assets/images/logosProjeto/HopTech-dark.png"
+            class="logo_hoptech" alt="Logo da HopTech"></a>
+        <button id="menu_dashboard" class="pageAtual" onclick="goDashboard()">
+            <img src="../../assets/images/icons/dashboard.png" class="icons_menu" alt="Ícone do dashboard">
+            Dashboard
+        </button>
+        <button id="menu_cadastros" onclick="goUsuario()">
+            <img src="../../assets/images/icons/icon_usuarios.png" class="icons_menu" style="width: 40px;"
+                alt="Ícone de usuários">
+            Usuários
+        </button>
+        <button id="menu_perms" onclick="goPermissoes()">
+            <img src="../../assets/images/icons/permissao.png" class="icons_menu" alt="Ícone de Permissões">
+            Permissões
+        </button>
+        <button id="menu_plantacoes" onclick="goPlantacao()">
+            <img src="../../assets/images/icons/iconeLupulo.png" class="icons_menu" style="width: 40px;"
+                alt="Ícone de usuários">
+            Plantações
+        </button>
+        <button id="menu_hist" onclick="goHistorico()">
+            <img src="../../assets/images/icons/iconeHistorico.png" class="icons_menu" style="width: 30px;"
+                alt="Ícone do histórico">
+            Histórico
+        </button>
+        <footer>
+            <a href="../../nextpoint-site/index.html"><img src="../../assets/images/logosProjeto/NEXTPOINT.png"
+                    class="logo_empresa" alt="Logo da NEXTPOINT"></a>
+            © 2023 HopTech
+        </footer>
+    </div>
+    <div class="div_conteiner_conteudo">
+        <div class="div_menu_top">
+            <div><!--  --></div>
+            <h3 class="titleDashboardCliente">Gerenciamento - <span id="empresaNome">EMPRESA_NOME</span> - <span id="usuarioNome">USUARIO_NOME</span></h3>
+            <button class="btnSair" onclick="sair(); return false">Sair</button>
+        </div>
+        <div class="div_grafico">
+            <div class="title_box">
+                <h1>Gráficos Plantação <b id="plantacaoIdentificacao"></b></h1>
+                <div class="div_select">
+                    <select id="select_plantacoes">
+                        <option value="" selected disabled>Selecione uma plantação para visualizar...</option>
+                    </select>
+                    <button onclick="atualizar()">Atualizar</button>
+                </div>    
+            </div>            
+            <div class="div_indicadores_plantacoes">
+                <!-- <div class="box_indicador">
+                    <div class="txt_indicador1">
+                        <h5>Janela solar do dia</h5>
+                        <span class="valorIndicador">12 Horas</span>
+                    </div>
+                    <div>
+                        <img class="icon_indicadores" src="../../assets/images/icons/por-do-sol.png"
+                            alt="icon indicador 1">
+                    </div>
+                </div> -->
+                <div class="box_indicador">
+                    <div>
+                        <h5>Região em destaque</h5>
+                        <span class="valorIndicador" id="regiao_destaque"></span>
+                    </div>
+                    <div>
+                        <img class="icon_indicadores" src="../../assets/images/icons/iconeIndicador.png"
+                            alt="icon indicador 2">
+                    </div>
+                </div>
+                <div class="box_indicador" id="box-cuidado">
+                    <div>
+                        <h5>Região de atenção</h5>
+                        <span class="valorIndicador" id="regiao_atencao"></span>
+                    </div>
+                    <div>
+                        <img class="icon_indicadores" src="../../assets/images/icons/iconeAtencao.png"
+                            alt="icon indicador 3">
+                    </div>
+                </div>
+            </div>
+            <div class="container_grafico">
+                <span>
+                    <div class="plantacao_grafico">
+                        <h2>Norte</h2>
+                        <canvas id="g1"></canvas>
+                    </div>
+                    <div class="plantacao_grafico">
+                        <h2>Nordeste</h2>
+                        <canvas id="g2"></canvas>
+                    </div>
+                </span>
+                <span>
+
+                    <div class="plantacao_grafico">
+                        <h2>Centro-Oeste</h2>
+                        <canvas id="g3"></canvas>
+                    </div>
+                    <div class="plantacao_grafico">
+                        <h2>Sudeste</h2>
+                        <canvas id="g4"></canvas>
+                    </div>
+                </span>
+                <span>
+                    <div class="plantacao_grafico">
+                        <h2>Sul</h2>
+                        <canvas id="g5"></canvas>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="js/plantacoes_graficos.js"></script>
+<!-- Importando a biblioteca ChartJS: -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<!--Funções de data atual e redirecionamento de páginas-->
+<script type="text/javascript" nonce="{coloque_seu_valor_nonce_aqui}"
+    src="https://desk.zoho.com/portal/api/web/inapp/858677000000226265?orgId=810882795" defer></script>
+<script src="js/funcoes.js"></script>
+<script>
+    puxarPlantacoes(sessionStorage.getItem('FK_EMPRESA'))
+    obterDadosGraficos(sessionStorage.getItem('FK_PLANTACAO'))
+    plantacaoIdentificacao.innerHTML = sessionStorage.getItem('FK_PLANTACAO')
+    function atualizar(){
+        sessionStorage.FK_PLANTACAO = Number(select_plantacoes.value)
+        location.reload()
+    }
+    function puxarPlantacoes(idEmpresa){
+        fetch(`/medidas/plantacoesPorEmpresa/${idEmpresa}`, {cache: 'no-store'})
+        .then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    for(i = 0; i <  resposta.length; i++){
+                        const option = document.createElement('option');
+                        option.textContent = 'Plantação ' + resposta[i].idPlantacao;
+                        option.setAttribute('class', 'optionPlantacoes')
+                        option.setAttribute('value', resposta[i].idPlantacao)
+                        select_plantacoes.appendChild(option);
+                    }
+                    exibirPlantacoesPermitidas()
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+    }
+    
+    function obterDadosGraficos(plantacao) {
+        obterDadosGrafico(1, plantacao, sessionStorage.getItem('FK_EMPRESA'))
+        obterDadosGrafico(2, plantacao, sessionStorage.getItem('FK_EMPRESA'))
+        obterDadosGrafico(3, plantacao, sessionStorage.getItem('FK_EMPRESA'))
+        obterDadosGrafico(4, plantacao, sessionStorage.getItem('FK_EMPRESA'))
+        obterDadosGrafico(5, plantacao, sessionStorage.getItem('FK_EMPRESA'))
+    }
+
+    function obterDadosGrafico(idSensor, fkPlantacao, fkEmpresa) {
+        fetch(`/medidas/ultimas/${idSensor}/${fkPlantacao}/${fkEmpresa}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+                    plotarGrafico(resposta, idSensor, fkPlantacao, fkEmpresa);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
+    function plotarGrafico(resposta, idSensor, fkPlantacao, fkEmpresa) {
+        console.log('iniciando plotagem do gráfico...');
+        // Criando estrutura para plotar gráfico - labels
+        let labels = []; // labels serve para ficar o dado que fica no eixo X  (NO NOSSO CASO, O HORARIO) 
+
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [{
+                label: 'Luminosidade (Hoje)',
+                data: [], // DADOS DO SENSOR (LUMINOSIDADE)
+                fill: false,
+                borderWidth: 1,
+                backgroundColor: '#9DC08B',
+                borderColor: '#9DC08B',
+                tension: 0.3 // Curvatura do gráfico
+            }]
+        };
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(resposta)
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            labels.push(registro.hrCaptura);
+            dados.datasets[0].data.push(registro.luminosidade); //
+        }
+
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(labels)
+        console.log('Dados:')
+        console.log(dados)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura para plotar gráfico - config
+        const config = {
+            type: 'line',
+            data: dados,
+            options: {
+                interaction: {
+                    mode: 'nearest', // Adiciona o modo "nearest" no tooltip
+                    axis: 'x', // Aparece o tooltip a partir dos eixos X
+                    intersect: false
+                },
+                layout: {
+                    padding: 5
+                },
+                elements: {
+                    point: {
+                        hoverRadius: 7
+                    }
+                },
+            }
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.querySelector(`#g${idSensor}`),
+            config
+        );
+
+        setTimeout(() => atualizarGrafico(idSensor, fkPlantacao, fkEmpresa, dados, myChart), 2000);
+    }
+
+    function atualizarGrafico(idSensor, fkPlantacao, fkEmpresa, dados, myChart) {
+        fetch(`/medidas/tempo-real/${idSensor}/${fkPlantacao}/${fkEmpresa}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (novoRegistro) {
+                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
+                    console.log(`Dados atuais do gráfico:`);
+                    console.log(dados);
+                    if (novoRegistro[0].hrCaptura == dados.labels[dados.labels.length - 1]) {
+                        //se a hora da captura enviada é igual a hora da captura que já temos, então, não é um novo gráfico, pois em DADOS temos só 10 dados, pois assim que entra um novo dado, o outro sai. 
+                        console.log("---------------------------------------------------------------")
+                        console.log("Como não há dados novos para captura, o gráfico não atualizará.")
+                        //avisoCaptura.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Foi trazido o dado mais atual capturado pelo sensor. <br> Como não há dados novos a exibir, o gráfico não atualizará."
+                        console.log("Horário do novo dado capturado:")
+                        console.log(novoRegistro[0].hrCaptura)
+                        console.log("Horário do último dado capturado:")
+                        console.log(dados.labels[dados.labels.length - 1])
+                        console.log("---------------------------------------------------------------")
+                    } else {
+                        // tirando e colocando valores no gráfico
+                        dados.labels.shift(); // apagar o primeiro
+                        dados.labels.push(novoRegistro[0].hrCaptura); // incluir um novo momento
+
+                        dados.datasets[0].data.shift();  // apagar o primeiro de umidade
+                        dados.datasets[0].data.push(novoRegistro[0].luminosidade); // incluir uma nova medida de umidade
+
+                        myChart.update();
+                    }
+
+                    // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(idSensor, fkPlantacao, fkEmpresa, dados, myChart), 2000);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+                // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
+                proximaAtualizacao = setTimeout(() => atualizarGrafico(idSensor, fkPlantacao, fkEmpresa, dados, myChart), 2000);
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+    
+    function exibirPlantacoesPermitidas(){
+        let allOptions = document.querySelectorAll('option');
+        const plantacaoPermitida = sessionStorage.getItem('PERM_PLANTACAO');
+        console.log(plantacaoPermitida)
+        if(plantacaoPermitida != 'null'){
+            console.log('removendo as opçoes nao permitidas')
+            for(options of allOptions ){
+                if(options.value != plantacaoPermitida){
+                    options.style.display = 'none'
+                }else{
+                    options.selected = true
+                }
+            }
+        }
+    }
+</script>
+    
